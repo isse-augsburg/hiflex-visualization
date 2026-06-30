@@ -1,0 +1,74 @@
+{
+    "linear_axis": {
+        "height": 1.08855124892,
+        "width": 1.49763583118,
+        "path": "axis/axis.png"
+    },
+    "amr": {
+        "width": 0.95353293413,
+        "height": 0.95353293413,
+        "path": "amr/amr.png"
+    },
+    "sled": {
+        "width": 1.20247933884,
+        "height": 1.20247933884,
+        "path": "robotic_arm/sled.png"
+    },
+    "docking_station": {
+        "width": 1.1,
+        "height": 1.1,
+        "idle": "docking_station/idle.png",
+        "occupied": "docking_station/occupied.png",
+        "charging_idle": "docking_station/charging_idle.png",
+        "charging_occupied": "docking_station/charging_occupied.png",
+        "parking": "docking_station/parking.png",
+        "charging": "docking_station/charging.png"
+    },
+    "storage": {
+        "width": 1.1,
+        "height": 1.1,
+        "path": "storage/storage.png"
+    },
+    "KR20": {
+        "width": 2.29670175439,
+        "height": 1.03351578947,
+        "path": "robotic_arm/KR20.png"
+    },
+    "KR30": {
+        "width": 2.06975494071,
+        "height": 1.16423715415,
+        "path": "robotic_arm/KR30.png"
+    },
+    "tray": {
+        "width": 0.7,
+        "height": 0.7,
+        "background": "tray/background.png",
+        "default_part": "tray/default_part.png",
+        "empty": "tray/empty.png",
+        "gripper": "tray/gripper.png",
+        "gripper-open": "tray/gripper-open.png",
+        "gripper-closed": "tray/gripper-closed.png",
+        "material": "tray/material.png",
+        "material-amr": "tray/material-tray-amr.png",
+        "toolchanger": "tray/toolchangerv2.png",
+        "partial_product": "tray/partial_product.png",
+        "complete_product": "tray/complete_product.png",
+        "screw": "tray/screw-v2.png",
+        "profile": "tray/profilev2.png",
+        "chute": "tray/chute.png",
+        "bracket": "tray/bracket.png",
+        "wheel": "tray/wheel.png"
+    },
+    "tool_renderings": {
+        "assembly_h" : "assets/tool_trolley_renderings/assemblies/assembly_h.png",
+        "assembly_v" : "assets/tool_trolley_renderings/assemblies/assembly_v.png",
+        "assembly_q" : "assets/tool_trolley_renderings/assemblies/assembly_q.png",
+        "profile_with_slot_nuts" : "assets/tool_trolley_renderings/atomic_parts/profile.png",
+        "frame" : "assets/tool_trolley_renderings/assemblies/frame.png",
+        "castor" : "assets/tool_trolley_renderings/atomic_parts/castor.png",
+        "grab_container" : "assets/tool_trolley_renderings/atomic_parts/grab_container.png",
+        "t-slot" : "assets/tool_trolley_renderings/atomic_parts/t-slot.png",
+        "screw" : "assets/tool_trolley_renderings/atomic_parts/screw.png",
+        "bracket" : "assets/tool_trolley_renderings/atomic_parts/bracket.png"
+    }
+}

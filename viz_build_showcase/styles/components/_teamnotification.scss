@@ -1,0 +1,152 @@
+// Variables
+$animation-in-duration: 800ms;
+$animation-out-duration: 600ms;
+$notification-bg: rgba(15, 20, 25, 0.85);
+$notification-text: #ffffff;
+$notification-success: #12c15a;
+$notification-accent: white;
+$notification-shadow: rgba(0, 0, 0, 0.2);
+$notification-glow: rgba(255, 255, 255, 0.3);
+$border-radius: 12px;
+$font-primary: 'Inter', 'Segoe UI', 'Arial', sans-serif;
+
+// Enhanced team notification
+.team-finish-notification {
+  position: fixed;
+  top: 0;
+  left: 0;
+  color: $notification-text;
+  font-family: $font-primary;
+  font-weight: 600;
+  text-align: center;
+  z-index: 1000;
+  pointer-events: none;
+  width: 280px;
+  border-radius: $border-radius;
+  opacity: 0;
+  box-shadow: 0 10px 25px -5px $notification-shadow;
+  transition: opacity $animation-in-duration ease-out;
+  overflow: hidden;
+
+  &.visible {
+    opacity: 1;
+  }
+
+  &.fade-out {
+    opacity: 0;
+    transition: opacity $animation-out-duration ease-in;
+  }
+
+  // Team name header
+  .team-name {
+    font-size: 1.3em;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    background-color: $notification-bg;
+    padding: 10px 14px;
+    border-top-left-radius: $border-radius;
+    border-top-right-radius: $border-radius;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  // Image container
+  .image-container {
+    width: 100%;
+    position: relative;
+    background-color: $notification-bg;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    min-height: 160px;
+    max-height: 280px;
+
+    img {
+      width: 100%;
+      display: block;
+      object-fit: contain; // Changed from cover to contain to avoid clipping
+      opacity: 0.9;
+      transition: opacity 0.3s ease;
+      max-height: 280px;
+
+      &.loading {
+        opacity: 0;
+        min-height: 160px;
+      }
+
+      &.error {
+        opacity: 0.6;
+        filter: grayscale(100%);
+        min-height: 160px;
+      }
+    }
+  }
+
+  // Finish text overlay
+  .finish-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    border-bottom-left-radius: $border-radius;
+    border-bottom-right-radius: $border-radius;
+
+    &.visible {
+      opacity: 1;
+      animation: fadeInOverlay 0.6s ease forwards;
+    }
+  }
+
+  // Finish text
+  .finish-text {
+    color: $notification-accent;
+    font-size: 1.4em;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    padding: 0 20px;
+  }
+}
+
+// Animations
+@keyframes fadeInOverlay {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+// Media queries for responsive design
+@media (max-width: 768px) {
+  .team-finish-notification {
+    width: 240px;
+
+    .team-name {
+      font-size: 1.2em;
+      padding: 8px 12px;
+    }
+
+    .image-container {
+      min-height: 140px;
+      max-height: 220px;
+
+      img {
+        max-height: 220px;
+      }
+    }
+
+    .finish-text {
+      font-size: 1.2em;
+    }
+  }
+}

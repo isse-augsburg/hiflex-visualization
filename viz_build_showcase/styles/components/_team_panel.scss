@@ -1,0 +1,375 @@
+// Variables
+$bg-color: #222222;
+$text-color: #f0f0f0;
+$border-color: #444444;
+$header-bg: #333333;
+$card-bg: #2d2d2d;
+$chip-bg: #3d3d3d;
+$box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+$box-shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.3);
+$transition-speed: 0.2s;
+
+// --- Generic Component Panel Styles ---
+.component-overview-content,
+.component-overview-panel {
+  color: $text-color;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  flex: 1;
+  height: 600px; /* Or use flexbox for dynamic height */
+  overflow: auto;
+
+  // Header for total count (used by both panels)
+  .team-count-header {
+    margin: 10px 0;
+    padding-bottom: 10px;
+    border-bottom: 1px solid $border-color;
+    color: #aaa;
+    font-size: 0.9em;
+    font-weight: 600;
+  }
+
+  // Header for component types (specific to AllComponentsPanel)
+  .component-type-header {
+    margin: 20px 0 10px 0;
+    padding-bottom: 5px;
+    border-bottom: 1px solid $border-color;
+    color: #ccc;
+    font-size: 1em;
+    font-weight: 600;
+    text-transform: capitalize;
+  }
+
+  // Container for all content
+  .components-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; // Reduced gap for a tighter view
+    padding-bottom: 20px;
+  }
+
+  // Message for when no data is available
+  .no-teams-message {
+    text-align: center;
+    padding: 40px 20px;
+    font-style: italic;
+    color: #999;
+  }
+}
+
+
+// --- Shared Entity/Component Table & Details Styles ---
+.entity-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 8px;
+
+  th {
+    text-align: left;
+    padding: 6px 8px;
+    font-size: 0.85em;
+    font-weight: 600;
+    border-bottom: 1px solid #444;
+    color: #aaa;
+  }
+
+  td {
+    text-align: left;
+    padding: 8px;
+    font-size: 0.85em;
+    border-bottom: 1px solid #333;
+    vertical-align: middle;
+
+    i {
+      margin-right: 8px;
+      width: 12px;
+      text-align: center;
+    }
+  }
+
+  .entity-row {
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    background-color: #2c2c2c; /* Default row color */
+
+    &:hover {
+      background: rgba($border-color, 0.4);
+    }
+
+    &.expanded {
+      background: rgba($border-color, 0.2);
+    }
+  }
+
+  .entity-details-row {
+    td {
+      padding: 0; // Remove padding from the cell to allow details to fill it
+    }
+    .entity-details {
+      padding: 15px;
+      background: #222;
+      border-top: 1px solid #444;
+      // Base size for the expanded details; the inner tables/headings are sized
+      // in em relative to this, so bumping it enlarges the whole detail block.
+      font-size: 14px;
+    }
+  }
+
+  .holding-part {
+    font-weight: 600;
+    color: #3498db; // Highlight the held part
+  }
+
+  .entity-expand-btn {
+    background: none;
+    border: none;
+    color: #aaa;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+  }
+}
+
+.detail-section {
+  margin-bottom: 20px;
+
+  h5 {
+    margin: 0 0 8px 0;
+    color: #fff;
+    font-size: 0.9em;
+    font-weight: 600;
+    border-bottom: 1px solid #444;
+    padding-bottom: 4px;
+  }
+
+  .detail-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8em;
+
+    tr {
+      border-bottom: 1px solid #333;
+    }
+
+    td {
+      padding: 4px 8px;
+      &:first-child {
+        font-weight: 600;
+        color: #aaa;
+        width: 30%;
+      }
+      &:last-child {
+        color: #fff;
+      }
+    }
+  }
+
+  .teams-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    .team-badge {
+      background: #3498db;
+      color: #1a1a1a;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 0.75em;
+      font-weight: 600;
+    }
+  }
+
+  .skill-item {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+    padding: 8px;
+    margin-bottom: 8px;
+    .skill-header {
+      margin-bottom: 4px;
+      .skill-badge {
+        font-size: 0.7em;
+        padding: 1px 6px;
+        border-radius: 8px;
+        margin-left: 6px;
+        &.active { background: #2ecc71; color: white; }
+        &.current { background: #3498db; color: white; }
+        &.transfer { background: #9b59b6; color: white; }
+      }
+    }
+    .skill-details { font-size: 0.75em; color: #ccc; line-height: 1.4; }
+  }
+
+  .no-metadata { color: #999; font-style: italic; text-align: center; padding: 20px; }
+}
+
+
+// --- Team Overview Specific Styles ---
+.team-card {
+  border-radius: 8px;
+  overflow: hidden;
+  background: $card-bg;
+  box-shadow: $box-shadow;
+  transition: all $transition-speed ease;
+  margin-bottom: 16px; // Replaces gap for team cards
+
+  &:hover {
+    box-shadow: $box-shadow-hover;
+  }
+
+  .team-header {
+    padding: 15px;
+    color: #000000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.3s ease;
+
+    &:hover {
+      filter: brightness(1.1);
+    }
+
+    .team-title-section {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      h3 { margin: 0; font-weight: 600; font-size: 1.1em; }
+      .team-icon { font-size: 0.9em; opacity: 0.8; }
+    }
+
+    .team-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      .entity-count {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.8em;
+        background: rgba(0, 0, 0, 0.25);
+        color: #FFFFFF;
+        border-radius: 12px;
+        padding: 2px 8px;
+        font-weight: 600;
+      }
+      i { transition: transform 0.3s ease; margin-left: 8px; }
+    }
+  }
+
+  .team-content {
+    padding: 0 15px 15px 15px; // Reduced top padding
+    background: #252525;
+    display: none; // Handled by component logic
+  }
+
+  &.expanded {
+    .team-content {
+      display: block;
+    }
+  }
+}
+
+// --- Utility & Theming Styles ---
+.status-good { color: #2ecc71 !important; }
+.status-bad { color: #e74c3c !important; }
+.battery-high { color: #2ecc71 !important; }
+.battery-medium { color: #f39c12 !important; }
+.battery-low { color: #f39c12 !important; }
+.battery-critical { color: #e74c3c !important; }
+
+.entity-context-menu {
+  position: absolute;
+  background-color: #333;
+  border: 1px solid #555;
+  border-radius: 4px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  z-index: 9999;
+  padding: 5px 0;
+  min-width: 150px;
+  .context-menu-item {
+    padding: 8px 15px;
+    cursor: pointer;
+    color: #fff;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    transition: background-color 0.2s ease;
+    &:hover { background-color: #444; }
+    i { margin-right: 8px; width: 14px; text-align: center; }
+  }
+}
+
+// Icon styles (can be kept as is)
+.fa-robot { color: #3498db; }
+// ... other specific fa- icons ...
+.fa-users, .fa-eye, .fa-search, .fa-chevron-up, .fa-chevron-down { color: inherit; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.dark-theme {
+  // Now applies to the generic class
+  .component-overview-content,
+  .component-overview-panel {
+    color: $text-color;
+  }
+}
+
+// Responsive design (updated to use generic class)
+@media (max-width: 768px) {
+  .component-overview-content {
+    .team-card {
+      // Team card specific adjustments can remain
+    }
+    .entity-table {
+      th, td {
+        padding: 6px 4px;
+        font-size: 0.8em;
+      }
+    }
+    .detail-section .detail-table {
+      font-size: 0.75em;
+    }
+  }
+}
+
+.status-cell {
+  vertical-align: middle;
+  text-align: center;
+
+  > i {
+    margin: 0 !important;
+  }
+}
+
+.team-dots-container {
+  display: flex;
+  //justify-content: center;
+  //align-items: center;
+  gap: 4px;
+  margin-top: 6px;
+  height: 10px; // Reserve space to prevent layout shift
+}
+
+.team-dot {
+  display: block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+
+  //transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: scale(1.5);
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.7);
+  }
+}

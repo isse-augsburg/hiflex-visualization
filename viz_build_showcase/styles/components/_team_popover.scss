@@ -1,0 +1,153 @@
+@use "../utils/utils";
+
+// Team Popover
+.team-popover {
+  position: absolute;
+  z-index: 110; // Higher than team panel
+  width: 320px; // Increased width from 280px to 320px for a larger container
+  border-radius: 8px;
+  overflow: hidden;
+  @include utils.blurred-bg(); // Using the same blurred background as other components
+  background-color: rgba(0, 0, 0, 0.7); // Black with transparency for blur effect
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.3s ease, transform 0.3s ease, width 0.3s ease, padding 0.3s ease;
+  pointer-events: none; // Let mouse events pass through
+  padding: 12px; // Increased padding from 8px to 12px
+
+  // Media queries for larger screens
+  @media screen and (min-width: 1920px) {
+    width: 420px; // Larger container for Full HD screens (1920x1080) and above
+    padding: 16px; // More padding for larger screens
+  }
+
+  @media screen and (min-width: 2560px) {
+    width: 520px; // Even larger for 2K and 4K displays
+    padding: 20px;
+  }
+
+  // Visible state
+  &.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  // Image styling
+  img {
+    display: block;
+    width: 90%; // Reduced from 100% to 90% to allow for margin
+    height: auto;
+    object-fit: contain;
+    border-radius: 6px;
+    margin: 0 auto; // Center the image horizontally
+    max-height: 400px; // Set a maximum height to ensure image isn't too tall
+    transition: max-height 0.3s ease;
+
+    // Media queries for larger screens - increase image size
+    @media screen and (min-width: 1920px) {
+      max-height: 500px; // Larger image height for Full HD screens
+    }
+
+    @media screen and (min-width: 2560px) {
+      max-height: 600px; // Even larger for 2K and 4K displays
+      width: 95%; // Slightly wider on very large displays
+    }
+
+    // Loading state animation
+    &:not([src]), &[src=""], &.loading {
+      min-height: 350px;
+      background-color: rgba(255, 255, 255, 0.1);
+      background-image: linear-gradient(
+                      90deg,
+                      rgba(255, 255, 255, 0) 0,
+                      rgba(255, 255, 255, 0.2) 20%,
+                      rgba(255, 255, 255, 0.5) 60%,
+                      rgba(255, 255, 255, 0)
+      );
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+
+      @media screen and (min-width: 1920px) {
+        min-height: 450px; // Increase loading state height on larger screens
+      }
+
+      @media screen and (min-width: 2560px) {
+        min-height: 550px; // Even larger loading state on very large screens
+      }
+    }
+
+    // Error state
+    &.error {
+      min-height: 150px;
+      background-color: rgba(244, 67, 54, 0.1);
+      position: relative;
+
+      &::after {
+        content: '\f071'; // Font Awesome warning icon
+        font-family: 'Font Awesome 5 Free';
+        font-weight: 900;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 36px;
+        color: rgba(244, 67, 54, 0.7);
+      }
+
+      @media screen and (min-width: 1920px) {
+        min-height: 180px; // Slightly larger error state on bigger screens
+
+        &::after {
+          font-size: 42px; // Larger icon
+        }
+      }
+    }
+  }
+
+  // Optional team name caption
+  .team-caption {
+    margin-top: 8px;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 12px;
+    font-weight: 500;
+
+    @media screen and (min-width: 1920px) {
+      margin-top: 12px;
+      font-size: 14px; // Larger caption text on big screens
+    }
+  }
+
+  // Arrow at the bottom
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 10px solid rgba(0, 0, 0, 0.7);
+
+    @media screen and (min-width: 1920px) {
+      border-left: 12px solid transparent;
+      border-right: 12px solid transparent;
+      border-top: 12px solid rgba(0, 0, 0, 0.7);
+      bottom: -12px; // Adjusted position for larger arrow
+    }
+  }
+}
+
+// Shimmer animation for loading state
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+

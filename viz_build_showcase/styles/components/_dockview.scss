@@ -1,0 +1,441 @@
+@import "../constants/variables";
+
+// Scale the tab strip and individual tabs of every dockview group whose content
+// pane has the hiflex-panel-padding class (i.e. every panel EXCEPT the 3D view).
+// The class is placed on the inner wrapper element (which persists through panel
+// moves) so :has() is used to reach up to the dockview containers.
+// Both .dv-group-view (newer dockview) and .dv-groupview (older dockview) are
+// listed; duplicate matches are harmless.
+.dv-group-view:has(.hiflex-panel-padding),
+.dv-groupview:has(.hiflex-panel-padding) {
+  // Zoom the whole tab strip; the scale cascades to .dv-tab and its children
+  // (including Font Awesome icons) naturally without needing a separate rule.
+  // Applying zoom directly on .dv-tab would create an extra stacking context that
+  // breaks FA ::before pseudo-element rendering in QtWebEngine.
+  .dv-tabs-and-actions-container,
+  .dv-tabs-and-actions-container.dv-single-tab {
+    zoom: var(--zoom-scale, 1);
+  }
+}
+
+#dockview-container {
+  position: fixed;
+  top: 30px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+}
+
+/* -- Dockview dark-theme overrides -- */
+/*
+ * Override EVERY CSS custom property that dockview-core actually reads so our
+ * app palette is applied consistently.  Wrong names like --dv-background-color
+ * or --dv-pane-background-color are silently ignored by dockview; the correct
+ * names are listed below.
+ *
+ * Use `body .dockview-theme-dark` (higher specificity than dockview's own
+ * `.dockview-theme-dark` block) so our values win regardless of bundle order.
+ */
+body .dockview-theme-dark {
+  /*  Panel / group backgrounds  */
+  --dv-group-view-background-color:                         #{$card-bg};
+
+  /*  Tab strip  */
+  --dv-tabs-and-actions-container-background-color:         #{$header-bg};
+  --dv-tabs-and-actions-container-height:                   30px;
+  --dv-tabs-and-actions-container-font-size:                12px;
+
+  /*  Tab backgrounds  */
+  --dv-activegroup-visiblepanel-tab-background-color:       #{$bg-color};
+  --dv-activegroup-hiddenpanel-tab-background-color:        #{$header-bg};
+  --dv-inactivegroup-visiblepanel-tab-background-color:     #{$header-bg};
+  --dv-inactivegroup-hiddenpanel-tab-background-color:      #{$card-bg};
+
+  /*  Tab text colours ──────────────── */
+  --dv-activegroup-visiblepanel-tab-color:                  #{$text-color};
+  --dv-activegroup-hiddenpanel-tab-color:                   rgba(240, 240, 240, 0.55);
+  --dv-inactivegroup-visiblepanel-tab-color:                rgba(240, 240, 240, 0.4);
+  --dv-inactivegroup-hiddenpanel-tab-color:                 rgba(240, 240, 240, 0.25);
+
+  /* ── Borders & separators ────────────────────────────────────────────── */
+  --dv-tab-divider-color:                                   #{$border-color};
+  --dv-separator-border:                                    #{$border-color};
+  --dv-paneview-header-border-color:                        #{$border-color};
+
+  /* ── Resize sashes ───────────────────────────────────────────────────── */
+  --dv-sash-color:                                          transparent;
+  --dv-active-sash-color:                                   #{$button-bg};
+
+  /* ── Drag & drop ─────────────────────────────────────────────────────── */
+  --dv-drag-over-background-color:                          rgba(52, 152, 219, 0.15);
+  --dv-drag-over-border-color:                              #{$button-bg};
+
+  /* ── Misc ─────────────────────────────────────────────────────────────── */
+  --dv-icon-hover-background-color:                         rgba(255, 255, 255, 0.08);
+  --dv-floating-box-shadow:                                 #{$box-shadow};
+  --dv-tabs-container-scrollbar-color:                      #{$border-color};
+  --dv-paneview-active-outline-color:                       #{$button-bg};
+  --dv-border-radius:                                       0px;
+  --dv-tab-font-size:                                       12px;
+  --dv-tab-margin:                                          0;
+}
+
+.dockview-theme-dark .dv-tab {
+  font-size: 12px;
+  font-family: sans-serif;
+  transition: border-color $transition-speed;
+  
+  &.dv-active-tab {
+    border-bottom: 2px solid #{$button-bg} !important;
+  }
+}
+
+.dockview-theme-dark .view-container {
+  overflow: hidden;
+}
+
+/* -- View-menu dropdown styles -- */
+.view-menu-content {
+  min-width: 210px;
+  padding: 4px 0;
+  background: #{$card-bg};
+  border: 1px solid #{$border-color};
+  border-radius: 4px;
+}
+.view-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 12px;
+  color: #{$text-color};
+  user-select: none;
+  white-space: nowrap;
+}
+.view-menu-item:hover {
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+}
+.view-menu-check {
+  width: 14px;
+  text-align: center;
+  flex-shrink: 0;
+  font-size: 11px;
+  color: #{$button-bg};
+}
+.view-menu-check--hidden {
+  visibility: hidden;
+}
+.view-menu-icon {
+  width: 16px;
+  text-align: center;
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+.view-menu-separator {
+  border: none;
+  border-top: 1px solid #{$border-color};
+  margin: 4px 0;
+}
+
+/* -- Layout submenu & saved layout entries -- */
+.view-menu-item-has-submenu {
+  position: relative;
+}
+
+.view-submenu {
+  display: none;
+  position: absolute;
+  left: 100%;
+  top: 0;
+  min-width: 230px;
+  background: #{$card-bg};
+  border: 1px solid #{$border-color};
+  border-radius: 4px;
+  padding: 4px 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  z-index: 1002;
+
+  &.visible {
+    display: block;
+  }
+}
+
+.view-menu-item-disabled {
+  opacity: 0.5;
+  cursor: default;
+  font-style: italic;
+  padding-left: 16px;
+  &:hover {
+    background: transparent !important;
+    color: #{$text-color} !important;
+  }
+}
+
+.view-layout-entry-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  transition: background-color $transition-speed;
+  
+  &.layout-entry-active {
+    background: rgba(52, 152, 219, 0.15) !important;
+    border-left: 3px solid #{$button-bg} !important;
+    padding-left: 9px !important;
+  }
+  
+  &.layout-entry-default {
+    background: rgba(243, 156, 18, 0.1) !important;
+    
+    &.layout-entry-active {
+      background: linear-gradient(90deg, rgba(52, 152, 219, 0.15) 0%, rgba(243, 156, 18, 0.1) 100%) !important;
+    }
+  }
+  
+  .layout-name-text {
+    flex-grow: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+  
+  .layout-entry-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: auto;
+    
+    .layout-action-icon {
+      opacity: 0.5;
+      transition: opacity 0.2s, color 0.2s;
+      cursor: pointer;
+      font-size: 11px;
+      padding: 2px 4px;
+      
+      &:hover {
+        opacity: 1;
+      }
+      
+      &.layout-default-icon {
+        opacity: 0.7;
+        
+        &:hover {
+          color: #{$warning-color};
+        }
+      }
+      
+      &.layout-rename-icon:hover {
+        color: #{$button-bg};
+      }
+      
+      &.layout-overwrite-icon:hover {
+        color: #{$success-color};
+      }
+      
+      &.layout-delete-icon:hover {
+        color: #{$danger-color};
+      }
+    }
+  }
+}
+
+#entity-side-panel {
+  //display: none !important;
+}
+
+.dv-content-container {
+  padding: 0px !important;
+  box-sizing: border-box;
+
+  // The padding/no-padding classes live on our inner wrapper element,
+  // which survives panel moves. Use :has() so the container picks them up.
+  &:has(.hiflex-panel-padding) {
+    padding: 8px !important;
+  }
+
+  &:has(.hiflex-panel-no-padding) {
+    padding: 0px !important;
+  }
+}
+
+/* -- Dockview custom header positioning -- */
+.dv-groupview {
+  &.hiflex-header-bottom {
+    display: flex !important;
+    flex-direction: column-reverse !important;
+  }
+
+  &.hiflex-header-left {
+    display: flex !important;
+    flex-direction: row !important;
+
+    .dv-tabs-and-actions-container {
+      flex-direction: column !important;
+      height: 100% !important;
+      width: auto !important;
+      border-right: 1px solid var(--dv-separator-border);
+      border-bottom: none !important;
+
+      .dv-tabs-container {
+        flex-direction: column !important;
+
+        .dv-tab {
+          writing-mode: vertical-rl;
+          transform: rotate(180deg);
+          padding: 12px 6px !important;
+          border-right: none !important;
+          border-bottom: 1px solid var(--dv-tab-divider-color) !important;
+
+          &.dv-active-tab {
+            border-right: 2px solid #{$button-bg} !important;
+            border-bottom: 1px solid var(--dv-tab-divider-color) !important;
+            border-left: none !important;
+            border-top: none !important;
+          }
+
+          // Counter-rotate icons so they stay upright (tab is rotated 180° + vertical-rl)
+          .hiflex-tab-icon {
+            transform: rotate(90deg);
+            margin-right: 0 !important;
+            margin-bottom: 5px;
+            display: inline-block;
+          }
+        }
+      }
+    }
+  }
+
+  &.hiflex-header-right {
+    display: flex !important;
+    flex-direction: row-reverse !important;
+
+    .dv-tabs-and-actions-container {
+      flex-direction: column !important;
+      height: 100% !important;
+      width: auto !important;
+      border-left: 1px solid var(--dv-separator-border);
+      border-bottom: none !important;
+
+      .dv-tabs-container {
+        flex-direction: column !important;
+
+        .dv-tab {
+          writing-mode: vertical-rl;
+          padding: 12px 6px !important;
+          border-left: none !important;
+          border-bottom: 1px solid var(--dv-tab-divider-color) !important;
+
+          &.dv-active-tab {
+            border-left: 2px solid #{$button-bg} !important;
+            border-bottom: 1px solid var(--dv-tab-divider-color) !important;
+            border-right: none !important;
+            border-top: none !important;
+          }
+
+          // Rotate icons to match text direction (writing-mode vertical-rl = 90° CW)
+          .hiflex-tab-icon {
+            transform: rotate(90deg);
+            margin-right: 0 !important;
+            margin-bottom: 5px;
+            display: inline-block;
+          }
+        }
+      }
+    }
+  }
+}
+
+/* -- Generic Floating Context Menu Styles -- */
+.hiflex-context-menu {
+  background-color: #{$card-bg};
+  border: 1px solid #{$border-color};
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  padding: 4px 0;
+  min-width: 185px;
+  color: #{$text-color};
+  font-family: sans-serif;
+  font-size: 12px;
+  user-select: none;
+}
+
+.hiflex-context-menu-item {
+  display: flex;
+  align-items: center;
+  padding: 6px 12px;
+  cursor: pointer;
+  gap: 8px;
+  position: relative;
+  transition: background-color $transition-speed;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+  }
+
+  &.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    &:hover {
+      background-color: transparent;
+    }
+  }
+
+  .hiflex-context-menu-icon-wrapper {
+    width: 14px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    color: #{$button-bg};
+    
+    i {
+      font-size: 11px;
+    }
+    
+    .check-icon {
+      color: #{$success-color};
+    }
+  }
+
+  .label {
+    flex-grow: 1;
+  }
+
+  .arrow-icon {
+    font-size: 9px;
+    opacity: 0.6;
+    margin-left: 8px;
+  }
+}
+
+.hiflex-context-menu-separator {
+  border: none;
+  border-top: 1px solid #{$border-color};
+  margin: 4px 0;
+}
+
+.hiflex-context-menu-submenu {
+  display: none;
+  position: absolute;
+  left: 100%;
+  top: 0;
+  background-color: #{$card-bg};
+  border: 1px solid #{$border-color};
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  padding: 4px 0;
+  min-width: 140px;
+  z-index: 10001;
+
+  &.visible {
+    display: block;
+  }
+
+  &.open-left {
+    left: auto;
+    right: 100%;
+  }
+}

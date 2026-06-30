@@ -1,0 +1,440 @@
+// Performance Panel SCSS
+// Variables
+$dark-bg-primary: #1e1e1e;
+$dark-bg-secondary: #2d2d2d;
+$dark-bg-tertiary: #3d3d3d;
+$dark-text-primary: #e0e0e0;
+$dark-text-secondary: #ccc;
+$dark-text-muted: #aaa;
+$dark-border: #444;
+$dark-graph-bg: #1a1a1a;
+$dark-progress-bg: #222;
+$dark-method-border: #4a4a4a;
+
+$light-bg-primary: #ffffff;
+$light-bg-secondary: #f5f5f5;
+$light-bg-tertiary: #e8e8e8;
+$light-text-primary: #333;
+$light-text-secondary: #555;
+$light-text-muted: #666;
+$light-border: #ddd;
+$light-graph-bg: #fff;
+$light-progress-bg: #ddd;
+$light-method-border: #ddd;
+
+$success-dark: #5cb85c;
+$success-light: #28a745;
+$warning-dark: #ffb74d;
+$warning-light: #f57c00;
+$error-dark: #ff6b6b;
+$error-light: #d32f2f;
+$info-dark: #4fc3f7;
+$info-light: #0288d1;
+$primary-dark: #007acc;
+$primary-light: #0077cc;
+
+$border-radius: 4px;
+$spacing-xs: 5px;
+$spacing-sm: 8px;
+$spacing-md: 10px;
+$spacing-lg: 15px;
+$spacing-xl: 20px;
+
+$font-size-xs: 11px;
+$font-size-sm: 12px;
+$font-size-md: 13px;
+$font-size-lg: 14px;
+$font-size-xl: 15px;
+$font-size-xxl: 24px;
+
+// Mixins
+@mixin theme($theme) {
+  @if $theme == 'dark' {
+    --bg-primary: #{$dark-bg-primary};
+    --bg-secondary: #{$dark-bg-secondary};
+    --bg-tertiary: #{$dark-bg-tertiary};
+    --text-primary: #{$dark-text-primary};
+    --text-secondary: #{$dark-text-secondary};
+    --text-muted: #{$dark-text-muted};
+    --border-color: #{$dark-border};
+    --graph-bg: #{$dark-graph-bg};
+    --progress-bg: #{$dark-progress-bg};
+    --method-border: #{$dark-method-border};
+    --success-color: #{$success-dark};
+    --warning-color: #{$warning-dark};
+    --error-color: #{$error-dark};
+    --info-color: #{$info-dark};
+    --primary-color: #{$primary-dark};
+  } @else {
+    --bg-primary: #{$light-bg-primary};
+    --bg-secondary: #{$light-bg-secondary};
+    --bg-tertiary: #{$light-bg-tertiary};
+    --text-primary: #{$light-text-primary};
+    --text-secondary: #{$light-text-secondary};
+    --text-muted: #{$light-text-muted};
+    --border-color: #{$light-border};
+    --graph-bg: #{$light-graph-bg};
+    --progress-bg: #{$light-progress-bg};
+    --method-border: #{$light-method-border};
+    --success-color: #{$success-light};
+    --warning-color: #{$warning-light};
+    --error-color: #{$error-light};
+    --info-color: #{$info-light};
+    --primary-color: #{$primary-light};
+  }
+}
+
+// Main container
+.performance-panel-container {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+
+  &.theme-dark {
+    @include theme('dark');
+    color: var(--text-primary);
+  }
+
+  &.theme-light {
+    @include theme('light');
+    color: var(--text-primary);
+  }
+}
+
+// Content wrapper
+.content-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  padding: $spacing-lg;
+}
+
+
+// Main content area
+.performance-content {
+  flex: 1;
+  overflow: auto;
+  border-radius: $border-radius;
+
+  h4 {
+    font-weight: bold;
+    margin: 0 0 $spacing-md 0;
+    color: var(--text-primary);
+    font-size: $font-size-lg;
+
+    &.with-top-margin {
+      margin-top: $spacing-xl;
+    }
+  }
+}
+
+// FPS Section
+.fps-metrics {
+  margin-bottom: $spacing-xl;
+}
+
+.fps-display {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-md;
+  margin-bottom: $spacing-md;
+}
+
+.fps-metric-box {
+  flex: 1;
+  min-width: 70px;
+  background-color: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: $border-radius;
+  padding: $spacing-sm;
+  text-align: center;
+
+  .value {
+    font-size: $font-size-xxl;
+    font-weight: bold;
+    margin-bottom: 2px;
+  }
+
+  .label {
+    font-size: $font-size-sm;
+    color: var(--text-muted);
+  }
+}
+
+// Status colors
+.status-good {
+  color: var(--success-color) !important;
+}
+
+.status-warning {
+  color: var(--warning-color) !important;
+}
+
+.status-error {
+  color: var(--error-color) !important;
+}
+
+// Frame time stats
+.frame-time-stats {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: $spacing-sm;
+  font-size: $font-size-sm;
+  color: var(--text-muted);
+  margin-top: $spacing-sm;
+  padding: $spacing-sm;
+  background-color: var(--bg-tertiary);
+  border-radius: $border-radius;
+
+  div {
+    flex: 1;
+    min-width: 80px;
+  }
+
+  strong {
+    font-weight: bold;
+    color: var(--text-secondary);
+  }
+}
+
+// Spike log
+.spike-log {
+  margin-top: $spacing-md;
+  font-size: $font-size-sm;
+  background-color: var(--bg-tertiary);
+  border: 1px solid var(--error-color);
+  border-radius: $border-radius;
+  padding: $spacing-sm;
+
+  .spike-header {
+    font-weight: bold;
+    color: var(--error-color);
+    margin-bottom: $spacing-xs;
+  }
+
+  div:not(.spike-header) {
+    color: var(--text-muted);
+    margin-bottom: 2px;
+    font-family: monospace;
+  }
+}
+
+// Graph container
+.graph-container {
+  margin-bottom: $spacing-xl;
+  position: relative;
+
+  .fps-graph {
+    width: 100%;
+    max-width: 360px;
+    height: 120px;
+    background-color: var(--graph-bg);
+    border: 1px solid var(--border-color);
+    border-radius: $border-radius;
+    display: block;
+  }
+
+  .target-label {
+    position: absolute;
+    top: $spacing-xs;
+    right: $spacing-md;
+    font-size: $font-size-xs;
+    color: var(--text-muted);
+    background-color: var(--bg-tertiary);
+    padding: 2px $spacing-xs;
+    border-radius: 2px;
+    border: 1px solid var(--border-color);
+  }
+}
+
+// Method metrics section
+.method-metrics {
+  .metric-item {
+    margin-bottom: $spacing-md;
+    padding: $spacing-md;
+    background-color: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: $border-radius;
+    border-left: 4px solid var(--primary-color);
+
+    .method-name {
+      font-weight: bold;
+      margin-bottom: $spacing-xs;
+      font-size: $font-size-lg;
+      color: var(--text-primary);
+    }
+
+    .stats-container {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: $spacing-sm;
+      font-size: $font-size-sm;
+      color: var(--text-secondary);
+
+      span {
+        flex: 1;
+        min-width: 80px;
+      }
+    }
+  }
+}
+
+// Group metrics section
+.group-metrics {
+  .group-item {
+    margin-bottom: $spacing-lg;
+    padding: $spacing-md;
+    background-color: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: $border-radius;
+
+    // Border color determined by limit status
+    &.within-limit {
+      border-left: 4px solid var(--success-color);
+    }
+
+    &.over-limit {
+      border-left: 4px solid var(--error-color);
+    }
+
+    .group-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: $spacing-sm;
+      flex-wrap: wrap;
+      gap: $spacing-sm;
+
+      .group-name {
+        font-weight: bold;
+        font-size: $font-size-xl;
+        color: var(--text-primary);
+      }
+
+      .accumulated-time {
+        font-size: $font-size-md;
+        font-weight: bold;
+
+        &.within-limit {
+          color: var(--success-color);
+        }
+
+        &.over-limit {
+          color: var(--error-color);
+        }
+      }
+    }
+
+    .progress-container {
+      height: 8px;
+      background-color: var(--progress-bg);
+      border-radius: 4px;
+      margin-bottom: $spacing-md;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+
+      .progress-bar {
+        height: 100%;
+        transition: width 0.3s ease;
+
+        &.within-limit {
+          background-color: var(--success-color);
+        }
+
+        &.over-limit {
+          background-color: var(--error-color);
+        }
+      }
+    }
+
+    .group-methods {
+      margin-top: $spacing-sm;
+
+      .method-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: $spacing-xs $spacing-sm;
+        border-bottom: 1px solid var(--method-border);
+        font-size: $font-size-md;
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        &:hover {
+          background-color: var(--bg-secondary);
+        }
+
+        div:first-child {
+          font-weight: 500;
+          color: var(--text-primary);
+        }
+
+        .method-stats {
+          color: var(--text-muted);
+          font-family: monospace;
+          font-size: $font-size-sm;
+        }
+      }
+    }
+  }
+}
+
+// Placeholder content
+.placeholder {
+  text-align: center;
+  font-style: italic;
+  color: var(--text-muted);
+  padding: $spacing-xl;
+  background-color: var(--bg-tertiary);
+  border: 1px dashed var(--border-color);
+  border-radius: $border-radius;
+  margin: $spacing-md 0;
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .content-wrapper {
+    padding: $spacing-md;
+  }
+
+  .performance-content {
+    padding: $spacing-md;
+  }
+
+  .fps-display {
+    gap: $spacing-sm;
+  }
+
+  .fps-metric-box {
+    min-width: 60px;
+
+    .value {
+      font-size: $font-size-xl;
+    }
+  }
+
+  .frame-time-stats {
+    flex-direction: column;
+    gap: $spacing-xs;
+  }
+
+  .graph-container .fps-graph {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .group-item .group-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .method-metrics .metric-item .stats-container {
+    flex-direction: column;
+    gap: $spacing-xs;
+  }
+}

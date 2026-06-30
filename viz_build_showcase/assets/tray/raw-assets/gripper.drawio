@@ -1,0 +1,13 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.7.8 Chrome/128.0.6613.36 Electron/32.0.1 Safari/537.36" version="24.7.8">
+  <diagram name="Page-1" id="Cm8YQ3JP16WOb9ETprXb">
+    <mxGraphModel dx="1198" dy="710" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="500" pageHeight="500" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="KUUSatRIKKroXCvMez2_-2" value="" style="shape=image;verticalLabelPosition=bottom;labelBackgroundColor=default;verticalAlign=top;aspect=fixed;imageAspect=0;image=data:image/svg+xml,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NC45ODkgNjEuNjQ5IiBoZWlnaHQ9IjIzMy4wMDUiIHdpZHRoPSIyNDUuNjI5Ij48cGF0aCBkPSJNMTQuNzg5IDguOTAybC05LjI0NSAyLjkwNCAxLjkzNCA2LjE1N2MuODgyLjMxOSAxLjgxMi40ODQgMi43NS40ODkgMi41NjcgMCA0Ljk4Ny0xLjE5OSA2LjU0My0zLjI0MmwtMS45ODEtNi4zMDl6bTIuNjE1IDguMzI1Yy0xLjg4NiAxLjkzNS00LjQ3NCAzLjAyNi03LjE3NiAzLjAyNy0uNzEtLjAwOC0xLjQxNy0uMDkyLTIuMTA5LS4yNWw3Ljk2IDI1LjM0NGMyLjEwNC0xLjc2NyA0Ljg1OS0yLjgzOSA3Ljg3NC0yLjgzOWExMi41OCAxMi41OCAwIDAgMSAxLjQxNy4wOGwtNy45NjYtMjUuMzYyeiIvPjxwYXRoIGQ9Ik04LjkzNSA1LjEyMkw3LjEyIDE1LjI3OGw4LjEzOCAxLjQ1NWMyLjAxNC0xLjU1NyAzLjE5My0zLjk2IDMuMTk0LTYuNTA2LS4wMDMtMS4yMjktLjI4Mi0yLjQ0Mi0uODE2LTMuNTVMOC45MzUgNS4xMjJ6bTEwLjc5MiAxLjkyOWMuMzQ2IDEuMDIzLjUyNCAyLjA5Ni41MjggMy4xNzYgMCAyLjU3LS45ODggNS4wNDItMi43NTggNi45MDVsMjYuMzM4IDQuNzA4IDEuODE2LTEwLjE1Ni0yNS45MjQtNC42MzR6Ii8+PGNpcmNsZSByPSI4LjA4NiIgY3k9IjEwLjIyNyIgY3g9IjEwLjIyNyIvPjxwYXRoIGQ9Ik0yMy45NTQgNDQuNDg0Yy01LjI0NyAwLTkuNTAxIDQuMDgzLTkuNTAxIDkuMTE5LS4wOTMgMi4xMTUtLjA5NCA0LjMxMS0uMTA4IDYuMTM0aDE5LjIxOGMuMDExLTEuOTg3LjAzOC00LjMyNS0uMTA4LTYuMTM0IDAtNS4wMzYtNC4yNTQtOS4xMTktOS41MDEtOS4xMTl6bTE4Ljk5Mi0yMy4wMThsOC4yMiA3LjcyOCAxMS4wMzMtMi4zNi0uODI5LTMuODc2LTkuMDAyIDEuOTI2LTYuNzA3LTYuMzA2em0xLjg1NS0xMC4yOThsMTAuMzc4LTQuNDI2IDkuNTQ2IDYuMDEzLTIuMTEyIDMuMzU0LTcuNzg5LTQuOTA3LTguNDY3IDMuNjEyeiIvPjxwYXRoIGQ9Ik00MS4zNzYgOS4xNjZsNy4xNyAxLjEzNC0yLjEzMiAxMy40ODItNy4xNzEtMS4xMzR6Ii8+PC9zdmc+;clipPath=inset(8.8% 0% 51.29% 59.76%);rotation=-90;" vertex="1" parent="1">
+          <mxGeometry x="52" y="110" width="396" height="371.96" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

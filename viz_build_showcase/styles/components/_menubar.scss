@@ -1,0 +1,307 @@
+@mixin blurred-bg {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+// Variables
+$menubar-bg: rgba(34, 34, 34, 0.85);
+$menubar-hover-bg: rgba(50, 50, 50, 0.9);
+$menubar-text: #eee;
+$menubar-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+$menu-content-bg: rgba(40, 40, 40, 0.95);
+$menu-content-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+$menu-hover-bg: rgba(60, 60, 60, 0.9);
+$menu-separator-color: rgba(255, 255, 255, 0.2);
+$animation-speed: 200ms;
+
+.integrated-menubar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  background-color: $menubar-bg;
+  box-shadow: $menubar-shadow;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  user-select: none;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  padding: 0;
+  box-sizing: border-box;
+  @include blurred-bg;
+
+  // When reparented into the THREE.js host element, switch from viewport-fixed to
+  // container-absolute so the bar overlays only the 3D panel area.
+  &.menubar-contained {
+    position: absolute;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 10; // lower z-index since it's scoped to the host container
+  }
+
+  .menubar-section {
+    display: flex;
+    height: 100%;
+    align-items: center;
+  }
+
+  .menubar-separator {
+    width: 1px;
+    height: 20px;
+    background-color: rgba(255, 255, 255, 0.2);
+    margin: 0 15px;
+  }
+
+  .menubar-info {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding-right: 15px;
+    overflow: hidden;
+  }
+
+  .menubar-item {
+    position: relative;
+    height: 100%;
+
+    &:not(:last-child) {
+      border-right: 1px solid rgba(255, 255, 255, 0.1);
+    }
+  }
+
+  .menubar-title {
+    height: 100%;
+    padding: 0 15px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    color: $menubar-text;
+    font-size: 13px;
+    transition: background-color $animation-speed ease;
+
+    &:hover {
+      background-color: $menubar-hover-bg;
+    }
+  }
+
+  .menubar-content {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 220px;
+    background-color: $menu-content-bg;
+    box-shadow: $menu-content-shadow;
+    border-radius: 4px;
+    color: $menubar-text;
+    @include blurred-bg;
+
+    // Animation properties
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition:
+            opacity $animation-speed ease,
+            transform $animation-speed ease,
+            visibility $animation-speed ease;
+    z-index: 1001;
+    overflow: visible;
+
+    &.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+  }
+}
+
+// Info panel styling
+.info-group {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  margin-right: 0;
+  flex-shrink: 0;
+}
+
+.data-group {
+  flex: 1;
+  padding: 0 5px;
+  display: flex;
+  justify-content: space-between;
+  min-width: 0;
+}
+
+.info-label {
+  font-weight: bold;
+  color: #aaa;
+  text-align: right;
+  padding-right: 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex-shrink: 0;
+  font-size: 12px;
+}
+
+.info-value {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: white;
+  min-width: 0;
+  font-size: 12px;
+}
+
+.vertical-divider {
+  width: 1px;
+  height: 20px;
+  background-color: rgba(255, 255, 255, 0.2);
+  margin: 0 10px;
+  flex-shrink: 0;
+}
+
+// Icon styling
+.icon-rotation {
+  margin-right: 8px;
+  color: #aaa;
+  font-size: 12px;
+}
+
+// Menu styling
+.menu-list {
+  list-style: none;
+  padding: 4px 0;
+  margin: 0;
+}
+
+.menu-item {
+  padding: 8px 16px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background-color $animation-speed ease;
+  color: $menubar-text;
+
+  &:hover {
+    background-color: $menu-hover-bg;
+  }
+
+  &.disabled {
+    opacity: 0.5;
+    cursor: default;
+
+    &:hover {
+      background-color: transparent;
+    }
+  }
+
+  &.separator {
+    height: 1px;
+    background-color: $menu-separator-color;
+    margin: 4px 0;
+    padding: 0;
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 800px) {
+  .integrated-menubar {
+    .menubar-info {
+      .info-group:nth-child(5), // Hide rotation at first breakpoint
+      .vertical-divider:nth-child(6) {
+        display: none;
+      }
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .integrated-menubar {
+    .menubar-info {
+      .info-group:nth-child(3), // Hide cell center at second breakpoint
+      .vertical-divider:nth-child(4) {
+        display: none;
+      }
+    }
+  }
+}
+
+// For very small screens, we just keep mouse position
+@media (max-width: 480px) {
+  .integrated-menubar {
+    .menubar-info {
+      .info-group:nth-child(1), // Only keep mouse position
+      .vertical-divider:nth-child(2) {
+        display: flex;
+      }
+      .info-group:not(:nth-child(1)),
+      .vertical-divider:not(:nth-child(2)) {
+        display: none;
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 1921px) {
+  // Enhanced menubar for larger screens
+  .integrated-menubar {
+    height: 36px; // Taller menubar
+
+    .menubar-title {
+      font-size: 14px; // Larger menu titles
+      padding: 0 18px; // More horizontal padding
+    }
+
+    .menubar-separator {
+      height: 24px; // Taller separator
+      margin: 0 18px; // More spacing
+    }
+
+    .menubar-content {
+      min-width: 250px; // Wider dropdown menus
+    }
+  }
+
+  // Info panel enhancements
+  .info-group {
+    margin-right: 5px; // More spacing between info groups
+  }
+
+  .info-label {
+    font-size: 13px; // Larger label text
+    padding-right: 10px; // More spacing between label and value
+  }
+
+  .info-value {
+    font-size: 13px; // Larger value text
+  }
+
+  .vertical-divider {
+    height: 24px; // Taller divider
+    margin: 0 12px; // More spacing around dividers
+  }
+
+  // Icon enhancements
+  .icon-rotation {
+    margin-right: 10px;
+    font-size: 14px;
+  }
+
+  // Menu styling enhancements
+  .menu-list {
+    padding: 6px 0; // More vertical padding
+  }
+
+  .menu-item {
+    padding: 10px 18px; // More padding inside menu items
+    font-size: 14px; // Larger menu text
+  }
+
+  // Show more info items on large screens
+  .integrated-menubar .menubar-info {
+    .info-group,
+    .vertical-divider {
+      display: flex !important; // Override any responsive hiding
+    }
+  }
+}

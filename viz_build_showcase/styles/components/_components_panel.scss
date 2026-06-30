@@ -1,0 +1,690 @@
+// Variables
+$bg-color: #222222;
+$text-color: #f0f0f0;
+$border-color: #444444;
+$header-bg: #333333;
+$card-bg: #2d2d2d;
+$search-bg: #3d3d3d;
+$box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+$box-shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.3);
+$transition-speed: 0.2s;
+
+// Component type colors
+$final-product-color: #e74c3c;
+$assembly-color: #3498db;
+$atomic-part-color: #2ecc71;
+$bulk-part-color: #f39c12;
+$unknown-color: #95a5a6;
+
+// Status colors
+$positive-color: #27ae60;
+$negative-color: #e74c3c;
+$warning-color: #f39c12;
+$neutral-color: #95a5a6;
+
+// Base panel styles
+.components-overview-panel,
+.components-overview-content {
+  color: $text-color;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  flex: 1;
+  height: 600px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  // Scrollable container for components
+  .scrollable-container {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  // InstanceManager container
+  .components-container {
+    padding: 20px;
+
+    .component-count {
+      margin-bottom: 20px;
+      color: #aaa;
+      font-size: 0.9em;
+      font-weight: 500;
+    }
+
+    .no-components-message {
+      text-align: center;
+      padding: 60px 20px;
+      font-style: italic;
+      color: #999;
+      font-size: 1.1em;
+    }
+  }
+
+  // InstanceManager grid
+  .components-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px;
+  }
+
+  // Component card
+  .component-card {
+    background: $card-bg;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: $box-shadow;
+    transition: all $transition-speed ease;
+    cursor: pointer;
+    border-top: 4px solid transparent;
+
+    &:hover {
+      box-shadow: $box-shadow-hover;
+      transform: translateY(-2px);
+    }
+
+    // Smooth show/hide transitions
+    &[style*="display: none"] {
+      display: none !important;
+    }
+
+    &[style*="display: block"] {
+      display: block;
+      animation: fadeInCard 0.2s ease-out forwards;
+    }
+
+    // Component type colors
+    &.final-product {
+      border-top-color: $final-product-color;
+
+      .component-icon {
+        color: $final-product-color;
+      }
+    }
+
+    &.assembly {
+      border-top-color: $assembly-color;
+
+      .component-icon {
+        color: $assembly-color;
+      }
+    }
+
+    &.atomic-part {
+      border-top-color: $atomic-part-color;
+
+      .component-icon {
+        color: $atomic-part-color;
+      }
+    }
+
+    &.bulk-part {
+      border-top-color: $bulk-part-color;
+
+      .component-icon {
+        color: $bulk-part-color;
+      }
+    }
+
+    &.unknown {
+      border-top-color: $unknown-color;
+
+      .component-icon {
+        color: $unknown-color;
+      }
+    }
+
+    // Component header
+    .component-header {
+      padding: 16px;
+      background: lighten($card-bg, 3%);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+
+      .component-title-section {
+        flex: 1;
+        min-width: 0; // Allow text truncation
+        display: flex;
+        align-items: center;
+        gap: 12px;
+
+        .component-icon {
+          font-size: 1.2em;
+          flex-shrink: 0;
+        }
+
+        .component-image {
+          width: 32px;
+          height: 32px;
+          border-radius: 6px;
+          object-fit: cover;
+          border: 1px solid $border-color;
+          background: lighten($card-bg, 5%);
+          flex-shrink: 0;
+          transition: all $transition-speed ease;
+
+          &:hover {
+            border-color: #3498db;
+            transform: scale(1.05);
+          }
+
+          // Loading state
+          &:not([src]),
+          &[src=""] {
+            background: lighten($card-bg, 8%);
+            &::before {
+              content: '🖼️';
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+              font-size: 14px;
+              opacity: 0.5;
+            }
+          }
+        }
+
+        .component-title-wrapper {
+          flex: 1;
+          min-width: 0;
+
+          .component-title {
+            margin: 0 0 6px 0;
+            font-weight: 600;
+            font-size: 1.1em;
+            line-height: 1.2;
+            word-wrap: break-word;
+            transition: color 0.2s ease;
+
+            &.hoverable-part:hover {
+              color: #3498db;
+              text-decoration: underline;
+            }
+          }
+
+          .component-type-label {
+            font-size: 0.8em;
+            color: #aaa;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+          }
+        }
+      }
+
+      .stock-badge {
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 0.75em;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+        white-space: nowrap;
+
+        &.in-stock {
+          background: rgba($positive-color, 0.2);
+          color: lighten($positive-color, 10%);
+        }
+
+        &.low-stock {
+          background: rgba($warning-color, 0.2);
+          color: lighten($warning-color, 10%);
+        }
+
+        &.out-of-stock {
+          background: rgba($negative-color, 0.2);
+          color: lighten($negative-color, 10%);
+        }
+
+        &.no-demand {
+          background: rgba($neutral-color, 0.2);
+          color: lighten($neutral-color, 10%);
+        }
+      }
+    }
+
+    // Component content
+    .component-content {
+      padding: 16px;
+
+      .component-metrics {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin-bottom: 16px;
+
+        .metric {
+          text-align: center;
+          padding: 12px 8px;
+          background: lighten($card-bg, 5%);
+          border-radius: 8px;
+
+          .metric-label {
+            display: block;
+            font-size: 0.75em;
+            color: #aaa;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+          }
+
+          .metric-value {
+            display: block;
+            font-size: 1.4em;
+            font-weight: 700;
+            color: $text-color;
+          }
+        }
+      }
+
+      // Prerequisites section
+      .prerequisites-section {
+        margin-bottom: 16px;
+
+        .section-label {
+          font-size: 0.85em;
+          font-weight: 600;
+          color: #aaa;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          margin-bottom: 8px;
+        }
+
+        .prerequisites-list {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 6px;
+
+          .prerequisite-item {
+            background: lighten($card-bg, 8%);
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+
+            .prereq-name {
+              color: #ccc;
+              transition: color 0.2s ease;
+
+              &.hoverable-part {
+                position: relative;
+
+                &:hover {
+                  color: #3498db;
+                  text-decoration: underline;
+                }
+              }
+            }
+
+            .prereq-count {
+              background: rgba($text-color, 0.1);
+              color: $text-color;
+              padding: 1px 6px;
+              border-radius: 8px;
+              font-weight: 600;
+              font-size: 0.9em;
+            }
+          }
+        }
+      }
+
+      // Teams section
+      .teams-section {
+        margin-bottom: 16px;
+
+        .section-label {
+          font-size: 0.85em;
+          font-weight: 600;
+          color: #aaa;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          margin-bottom: 8px;
+        }
+
+        .teams-list {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+
+          .team-item {
+            .team-badge {
+              padding: 6px 12px;
+              border-radius: 16px;
+              font-size: 0.8em;
+              font-weight: 600;
+              border: 2px solid transparent;
+              transition: all 0.2s ease;
+              position: relative;
+              overflow: hidden;
+
+              .team-name {
+                color: #1a1a1a;
+                position: relative;
+                z-index: 1;
+              }
+
+              &.hoverable-team {
+                cursor: pointer;
+
+                &:hover {
+                  &::before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background: rgba(255, 255, 255, 0.1);
+                    z-index: 0;
+                  }
+
+                  .team-name {
+                  }
+                }
+
+                &:active {
+                  transform: translateY(0);
+                }
+              }
+            }
+          }
+        }
+      }
+
+      // Status section
+      .status-section {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+
+        .status-indicator {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          padding: 6px 10px;
+          border-radius: 16px;
+          font-size: 0.8em;
+          font-weight: 500;
+
+          i {
+            font-size: 0.9em;
+          }
+
+          &.positive {
+            background: rgba($positive-color, 0.15);
+            color: lighten($positive-color, 10%);
+            border: 1px solid rgba($positive-color, 0.3);
+          }
+
+          &.negative {
+            background: rgba($negative-color, 0.15);
+            color: lighten($negative-color, 10%);
+            border: 1px solid rgba($negative-color, 0.3);
+          }
+        }
+      }
+    }
+  }
+}
+
+// Dark theme support
+.dark-theme {
+  .components-overview-content,
+  .components-overview-panel {
+    color: $text-color;
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .components-overview-content {
+    .search-section {
+      .search-container {
+        max-width: 100%;
+      }
+    }
+    .components-container {
+      padding: 16px;
+    }
+
+    .components-grid {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    .component-card {
+      .component-header {
+        padding: 14px;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+
+        .component-title-section {
+          .component-image {
+            width: 28px;
+            height: 28px;
+          }
+        }
+
+        .stock-badge {
+          align-self: flex-start;
+        }
+      }
+
+      .component-content {
+        padding: 14px;
+
+        .component-metrics {
+          gap: 8px;
+
+          .metric {
+            padding: 10px 6px;
+
+            .metric-value {
+              font-size: 1.2em;
+            }
+          }
+        }
+
+        .teams-section {
+          .teams-list {
+            gap: 6px;
+
+            .team-item {
+              .team-badge {
+                padding: 5px 10px;
+                font-size: 0.75em;
+              }
+            }
+          }
+        }
+
+        .status-section {
+          flex-direction: column;
+          gap: 8px;
+
+          .status-indicator {
+            justify-content: center;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .components-overview-content {
+    .component-card {
+      .component-header {
+        .component-title-section {
+          gap: 8px;
+
+          .component-image {
+            width: 24px;
+            height: 24px;
+          }
+
+          .component-title-wrapper {
+            .component-title {
+              font-size: 1em;
+            }
+          }
+        }
+      }
+
+      .component-content {
+        .component-metrics {
+          grid-template-columns: 1fr;
+          gap: 6px;
+
+          .metric {
+            padding: 8px;
+
+            .metric-value {
+              font-size: 1.1em;
+            }
+          }
+        }
+
+        .teams-section {
+          .teams-list {
+            .team-item {
+              .team-badge {
+                padding: 4px 8px;
+                font-size: 0.7em;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Animations
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInCard {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.component-card {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+// Loading states
+.loading {
+  .component-card {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+}
+
+// Image tooltip
+.image-tooltip {
+  background: rgba(0, 0, 0, 0.9);
+  border: 1px solid $border-color;
+  border-radius: 8px;
+  padding: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  max-width: 200px;
+  max-height: 200px;
+
+  .tooltip-image {
+    width: 100%;
+    height: auto;
+    max-width: 180px;
+    max-height: 180px;
+    object-fit: contain;
+    border-radius: 4px;
+    display: block;
+  }
+}
+
+// Hoverable elements
+.hoverable-part {
+  position: relative;
+
+  &:hover {
+    color: #3498db !important;
+    cursor: pointer;
+  }
+}
+
+// Team-specific hover styles
+.hoverable-team {
+  position: relative;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+
+// Sticky search section
+.search-section {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: lighten($bg-color, 2%);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  &.sticky-search {
+    flex-shrink: 0;
+  }
+
+  .search-container {
+    position: relative;
+
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #aaa;
+      font-size: 0.9em;
+      z-index: 1;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 10px 12px 10px 35px;
+      background: $search-bg;
+      border: 1px solid $border-color;
+      border-radius: 6px;
+      color: $text-color;
+      font-size: 0.9em;
+      transition: all $transition-speed ease;
+      box-sizing: border-box;
+
+      &::placeholder {
+        color: #aaa;
+      }
+
+      &:focus {
+        outline: none;
+        border-color: #3498db;
+        box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+      }
+    }
+  }
+}

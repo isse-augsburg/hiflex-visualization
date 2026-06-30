@@ -1,0 +1,181 @@
+@use "../utils/utils";
+
+.entity-popover {
+  @include utils.blurred-bg();
+}
+
+// Popover styles
+.popover-container {
+  font-family: 'Arial', sans-serif;
+  padding: 12px;
+  max-width: 600px;
+  max-height: 80vh;
+  overflow-y: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+
+  // Title styling
+  .popover-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: whitesmoke;
+    margin: 0 0 10px 0;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+
+    i {
+      margin-right: 8px;
+      color: #4caf50;
+    }
+  }
+
+  // Grid layout for parts
+  .parts-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    width: 100%;
+
+    // Make a single child span the full row
+    .part-item:only-child {
+      grid-column: 1 / -1;
+    }
+
+    // Maintain the same 2-column layout for mobile
+    @media (max-width: 480px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  // Individual part item styling
+  .part-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    background: rgba(40, 44, 52, 0.5);
+    border-radius: 8px;
+    padding: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+  }
+
+  // Image container and image styling
+  .part-image-container {
+    width: 100%;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+    background-color: rgba(245, 245, 245, 0.1);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .part-image {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+  }
+
+  // Part name styling
+  .part-name {
+    font-size: 14px;
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+    color: whitesmoke;
+    margin-bottom: 8px;
+  }
+
+  // Inventory information
+  .part-inventory {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+    font-size: 13px;
+
+    span {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 8px;
+      border-radius: 4px;
+
+      i {
+        margin-right: 6px;
+      }
+    }
+
+    // Demand styling
+    .demand {
+      &.high-demand {
+        background-color: rgba(244, 67, 54, 0.2);
+        color: #ff7875;
+
+        i {
+          color: #ff4d4f;
+        }
+      }
+
+      &.low-demand {
+        background-color: rgba(76, 175, 80, 0.2);
+        color: #95de64;
+
+        i {
+          color: #73d13d;
+        }
+      }
+    }
+
+    // Available styling
+    .available {
+      &.in-stock {
+        background-color: rgba(33, 150, 243, 0.2);
+        color: #69c0ff;
+
+        i {
+          color: #40a9ff;
+        }
+      }
+
+      &.out-of-stock {
+        background-color: rgba(158, 158, 158, 0.2);
+        color: #d9d9d9;
+
+        i {
+          color: #bfbfbf;
+        }
+      }
+    }
+  }
+
+  // No parts message
+  .no-parts {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 24px;
+    color: #d9d9d9;
+    font-size: 16px;
+    background: rgba(40, 44, 52, 0.5);
+    border-radius: 8px;
+    border: 1px dashed rgba(255, 255, 255, 0.2);
+
+    i {
+      font-size: 24px;
+      margin-bottom: 10px;
+      display: block;
+      color: #bfbfbf;
+    }
+  }
+}

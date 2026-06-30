@@ -1,0 +1,459 @@
+// =============================================================================
+// Light theme
+// -----------------------------------------------------------------------------
+// All rules here are scoped under `body.light-mode`, the class the MenuBar theme
+// toggle adds to <body>. They override the app's default dark surfaces with a
+// light palette. The toggle lives in MenuBar.ts (renderZoomControls).
+// =============================================================================
+
+// Reuse the performance panel's own theme() mixin so the panel follows the
+// app-wide light toggle (it normally switches via its own .theme-light class).
+@use "performance_panel" as perf;
+
+// Light palette
+$l-bg:            #f4f5f7;                 // app / canvas backdrop
+$l-surface:       rgba(255, 255, 255, 0.9); // panels, menus, modals
+$l-surface-2:     rgba(245, 246, 248, 0.95);// secondary surface (tabs, inputs)
+$l-surface-3:     rgba(235, 237, 240, 0.95);// active/raised surface
+$l-text:          #1c1f24;                 // primary text
+$l-text-muted:    #5a6068;                 // labels / secondary text
+$l-border:        rgba(0, 0, 0, 0.12);
+$l-border-soft:   rgba(0, 0, 0, 0.08);
+$l-hover:         rgba(0, 0, 0, 0.06);
+$l-shadow:        0 2px 8px rgba(0, 0, 0, 0.15);
+
+body.light-mode {
+  background-color: $l-bg;
+
+  // --- Generic floating panel ---------------------------------------------
+  .panel {
+    background-color: $l-surface;
+    color: $l-text;
+    border-color: $l-border;
+  }
+
+  // --- MenuBar -------------------------------------------------------------
+  .integrated-menubar {
+    background-color: $l-surface;
+    box-shadow: $l-shadow;
+
+    .menubar-separator,
+    .vertical-divider {
+      background-color: $l-border;
+    }
+
+    .menubar-item:not(:last-child) {
+      border-right-color: $l-border-soft;
+    }
+
+    .menubar-title {
+      color: $l-text;
+      &:hover { background-color: $l-hover; }
+    }
+
+    .menubar-content {
+      background-color: $l-surface;
+      color: $l-text;
+      box-shadow: $l-shadow;
+    }
+  }
+
+  // Info panel text
+  .info-label,
+  .icon-rotation { color: $l-text-muted; }
+  .info-value { color: $l-text; }
+
+  // Menubar dropdown list items
+  .menu-item {
+    color: $l-text;
+    &:hover { background-color: $l-hover; }
+    &.separator { background-color: $l-border; }
+  }
+
+  // Zoom / theme toggle buttons
+  .zoom-btn {
+    border-color: $l-border;
+    background: rgba(0, 0, 0, 0.04);
+    color: $l-text;
+    &:hover { background: $l-hover; }
+  }
+  .zoom-display { color: $l-text; }
+
+  // --- Side panel ----------------------------------------------------------
+  .side-panel-container {
+    .side-panel,
+    .panel-content,
+    .side-panel-content {
+      background-color: $l-surface;
+      color: $l-text;
+    }
+    .panel-tab,
+    .side-panel-tab {
+      background-color: $l-surface-2;
+      color: $l-text-muted;
+      &.active { background-color: $l-surface-3; color: $l-text; }
+    }
+  }
+
+  // --- Modals --------------------------------------------------------------
+  .base-modal {
+    background-color: $l-surface;
+    color: $l-text;
+    border-color: $l-border;
+    .modal-header { color: $l-text; border-bottom-color: $l-border; }
+  }
+
+  // --- Settings panel ------------------------------------------------------
+  .settings-content {
+    color: $l-text;
+    .section-header { color: $l-text; border-bottom-color: $l-border; }
+  }
+
+  // --- Console -------------------------------------------------------------
+  // The console themes itself via CSS variables; the dark defaults only had
+  // --bg-main / --bg-input overridden, leaving the log text (--text-main) a
+  // near-white grey that was unreadable on the light background.
+  .console-panel-container {
+    --bg-main: #{$l-bg};
+    --bg-input: #ffffff;
+    --text-main: #{$l-text};
+    --text-dim: #{$l-text-muted};
+    --border-main: #{$l-border};
+    --btn-bg: #{$l-surface-3};
+    --btn-text: #{$l-text};
+    --btn-hover-bg: #{$l-hover};
+    --entry-hover-bg: rgba(0, 0, 0, 0.05);
+    color: $l-text;
+  }
+
+  // --- Generic team / floating panels -------------------------------------
+  .team-panel {
+    background-color: $l-surface;
+    color: $l-text;
+    border-color: $l-border;
+    box-shadow: $l-shadow;
+  }
+
+  // --- Dockview ------------------------------------------------------------
+  // Dockview reads its palette from CSS custom properties; override the ones
+  // the app sets in _dockview.scss so docked panels follow the light theme.
+  .dockview-theme-dark {
+    --dv-group-view-background-color: #{$l-bg};
+    --dv-tabs-and-actions-container-background-color: #{$l-surface-2};
+    --dv-activegroup-visiblepanel-tab-background-color: #{$l-surface};
+    --dv-activegroup-hiddenpanel-tab-background-color: #{$l-surface-2};
+    --dv-inactivegroup-visiblepanel-tab-background-color: #{$l-surface};
+    --dv-inactivegroup-hiddenpanel-tab-background-color: #{$l-surface-2};
+    --dv-tab-divider-color: #{$l-border};
+    --dv-activegroup-visiblepanel-tab-color: #{$l-text};
+    --dv-activegroup-hiddenpanel-tab-color: #{$l-text-muted};
+    --dv-inactivegroup-visiblepanel-tab-color: #{$l-text};
+    --dv-inactivegroup-hiddenpanel-tab-color: #{$l-text-muted};
+    --dv-separator-border: #{$l-border};
+    --dv-paneview-active-outline-color: #{$l-border};
+  }
+
+  .hiflex-panel-padding {
+    background-color: $l-surface;
+    color: $l-text;
+  }
+
+  // --- Side panel section headers & form controls --------------------------
+  .side-panel-section-header {
+    color: $l-text !important;
+    border-bottom-color: $l-border;
+  }
+
+  .panel-form-group {
+    label { color: $l-text-muted; }
+    input, select, textarea {
+      background-color: #ffffff;
+      border-color: $l-border;
+      color: $l-text;
+    }
+  }
+
+  // --- Search input (components panel) -------------------------------------
+  .search-container {
+    .search-icon { color: $l-text-muted; }
+    .search-input {
+      background: #ffffff;
+      border-color: $l-border;
+      color: $l-text;
+      &::placeholder { color: $l-text-muted; }
+    }
+  }
+
+  // --- Command palette -----------------------------------------------------
+  .cmd-palette-overlay {
+    background: rgba(0, 0, 0, 0.25);
+  }
+
+  .cmd-palette {
+    background: $l-surface;
+    border-color: $l-border;
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.25);
+  }
+
+  .cmd-palette-input-row { border-bottom-color: $l-border; }
+  .cmd-palette-search-icon { color: $l-text-muted; }
+
+  .cmd-palette-input {
+    color: $l-text;
+    &::placeholder { color: $l-text-muted; }
+  }
+
+  .cmd-palette-esc-badge {
+    color: $l-text-muted;
+    border-color: $l-border;
+    background: $l-hover;
+  }
+
+  .cmd-palette-empty { color: $l-text-muted; }
+
+  .cmd-palette-result {
+    &:hover { background: $l-hover; }
+    &.active { background: rgba(0, 0, 0, 0.08); }
+  }
+
+  .cmd-palette-result-icon { background: $l-hover; }
+  .cmd-palette-result-title { color: $l-text; }
+  .cmd-palette-result-snippet { color: $l-text-muted; }
+
+  .cmd-palette-footer {
+    border-top-color: $l-border;
+    color: $l-text-muted;
+    kbd {
+      border-color: $l-border;
+      background: $l-hover;
+      color: $l-text-muted;
+    }
+  }
+
+  // --- Team panel buttons --------------------------------------------------
+  .team-panel {
+    color: $l-text;
+
+    button:not(.team-panel-unhighlight-btn) {
+      background-color: $l-surface-2;
+      color: $l-text;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12);
+      &:hover { background-color: $l-surface-3; }
+    }
+
+    .team-panel-unhighlight-btn {
+      background-color: $l-surface-3;
+      color: $l-text;
+      &:hover { background-color: rgba(0, 0, 0, 0.12); }
+    }
+
+    button img.loading,
+    button img.error,
+    button img:not([src]),
+    button img[src=""] {
+      background-color: rgba(0, 0, 0, 0.08);
+    }
+  }
+
+  // --- Entity table (team panel) ------------------------------------------
+  .team-entities-container { color: $l-text; }
+  // "Team Members" heading — its white colour is set inline, so override hard.
+  .entities-label { color: $l-text !important; }
+
+  .entity-table {
+    color: $l-text;
+    th {
+      color: $l-text-muted;
+      border-bottom-color: $l-border;
+    }
+    td {
+      color: $l-text;
+      border-bottom-color: $l-border-soft;
+    }
+    .entity-row {
+      background-color: $l-surface;
+      &:hover { background: $l-hover; }
+      &.expanded { background: rgba(0, 0, 0, 0.04); }
+    }
+    .entity-details-row .entity-details {
+      background: $l-surface-2;
+      border-top-color: $l-border;
+    }
+    .entity-expand-btn {
+      color: $l-text-muted;
+      &:hover { background: $l-hover; color: $l-text; }
+    }
+  }
+
+  .detail-section {
+    h5 { color: $l-text; border-bottom-color: $l-border; }
+    .detail-table {
+      tr { border-bottom-color: $l-border-soft; }
+      td:first-child { color: $l-text-muted; }
+      td:last-child { color: $l-text; }
+    }
+    .skill-item { background: $l-hover; }
+    .skill-details { color: $l-text-muted; }
+    .no-metadata { color: $l-text-muted; }
+  }
+
+  // --- Team card / content -------------------------------------------------
+  .team-card {
+    background: $l-surface;
+    .team-content { background: $l-surface-2; }
+  }
+
+  // --- View menu (dockview tab dropdown) ----------------------------------
+  .view-menu-content,
+  .view-submenu {
+    background: $l-surface;
+    border-color: $l-border;
+    color: $l-text;
+  }
+  .view-menu-item {
+    color: $l-text;
+    &:hover { background: $l-hover; color: $l-text; }
+  }
+  .view-menu-separator { border-top-color: $l-border; }
+  .view-menu-item-disabled:hover { color: $l-text !important; }
+
+  // --- Context menu --------------------------------------------------------
+  .hiflex-context-menu,
+  .hiflex-context-menu-submenu {
+    background-color: $l-surface;
+    border-color: $l-border;
+    color: $l-text;
+  }
+  .hiflex-context-menu-item:hover {
+    background-color: $l-hover;
+  }
+  .hiflex-context-menu-separator { border-top-color: $l-border; }
+
+  // --- Components panel cards ----------------------------------------------
+  // The coloured top border per component type (assembly, atomic-part, …) is
+  // kept; only the dark surfaces and text are recoloured for the light theme.
+  .component-card {
+    background: $l-surface;
+    color: $l-text;
+    box-shadow: $l-shadow;
+
+    .component-header { background: $l-surface-2; }
+    .component-image {
+      border-color: $l-border !important;
+      background: $l-surface-3 !important;
+    }
+    .component-title { color: $l-text; }
+    // These live several levels deep in _components_panel.scss, so the defaults
+    // out-specify a shallow override; !important keeps the light theme winning.
+    .component-type-label,
+    .metric-label,
+    .section-label { color: $l-text-muted !important; }
+
+    .metric { background: $l-surface-2 !important; }
+    .metric-value { color: $l-text !important; }
+
+    .prerequisite-item {
+      background: $l-surface-3 !important;
+      .prereq-name { color: $l-text !important; }
+      .prereq-count {
+        background: $l-hover !important;
+        color: $l-text !important;
+      }
+    }
+  }
+
+  // --- Settings panel: preset cards ----------------------------------------
+  .preset-card {
+    background: $l-surface;
+    color: $l-text;
+    box-shadow: $l-shadow;
+
+    .preset-title { color: $l-text; }
+    .preset-description { color: $l-text-muted; }
+    // Active state keeps the success-colour accent defined in _settings_panel.
+  }
+
+  // --- Settings panel: individual setting rows -----------------------------
+  .setting-item {
+    background: rgba(0, 0, 0, 0.03);
+
+    .setting-label { color: $l-text; }
+    .setting-hint { color: $l-text-muted; }
+    .setting-input {
+      background: #ffffff;
+      border-color: $l-border;
+      color: $l-text;
+    }
+  }
+
+  // --- Performance panel ----------------------------------------------------
+  // The panel themes itself via CSS custom properties on a .theme-* class.
+  // Force its light palette here so .performance-content and all its children
+  // follow the app-wide light toggle regardless of the class it was built with.
+  .performance-panel-container {
+    @include perf.theme('light');
+    color: var(--text-primary);
+  }
+
+  // --- Side panel: vertical tab strip --------------------------------------
+  .side-panel-tabs {
+    background-color: $l-surface-2;
+    box-shadow: $l-shadow;
+
+    &::-webkit-scrollbar-thumb {
+      background: rgba(0, 0, 0, 0.15);
+    }
+  }
+
+  // --- Side panel: pin button ----------------------------------------------
+  // The pinned-state accent colour (set with higher specificity) is preserved.
+  .side-panel-pin-button {
+    background-color: $l-surface-2;
+    color: $l-text;
+    &:hover { background-color: $l-surface-3; }
+  }
+
+  // --- Entity popover (3D view) -------------------------------------------
+  // PopoverManager sets the dark background/pointer colours inline, so the
+  // light overrides need !important to take effect.
+  .entity-popover {
+    background-color: $l-surface !important;
+    color: $l-text;
+    border: 1px solid $l-border;
+    box-shadow: $l-shadow !important;
+  }
+  .entity-popover-close-button {
+    background: $l-hover !important;
+    color: $l-text !important;
+  }
+  // The little triangle pointer is coloured to match the popover background.
+  .entity-popover-pointer {
+    border-top-color: #ffffff !important;
+  }
+  .popover-container {
+    .popover-title {
+      color: $l-text;
+      border-bottom-color: $l-border;
+    }
+    .part-item {
+      background: $l-surface-2;
+      border-color: $l-border;
+      &:hover { border-color: rgba(0, 0, 0, 0.25); }
+    }
+    .part-image-container { background-color: $l-surface-3; }
+    .part-name { color: $l-text; }
+    .no-parts {
+      color: $l-text-muted;
+      background: $l-surface-2;
+      border-color: $l-border;
+    }
+  }
+
+  // --- Sticky search bar ---------------------------------------------------
+  // The default dark section background showed through the rounded input's
+  // corners; recolour it (and its shadow) for the light theme.
+  .search-section {
+    background: $l-surface-2;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  }
+}

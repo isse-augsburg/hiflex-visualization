@@ -1,0 +1,439 @@
+// Mixin for blurred background effect
+@mixin blurred-bg {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+// Variables
+$panel-bg: rgba(34, 34, 34, 0.85);
+$panel-tab-bg: rgba(40, 40, 40, 0.95);
+$panel-tab-active-bg: rgba(60, 60, 60, 0.95);
+$panel-text: #eee;
+$panel-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+$panel-border: rgba(255, 255, 255, 0.1);
+$animation-speed: 300ms;
+$tab-width: 50px; // Width of the tab area
+
+// Main container for the side panel
+.side-panel-container {
+  position: fixed;
+  top: 30px; // Position below a potential menubar (30px height assumed)
+  bottom: 0;
+
+  // When the panel is reparented into a contained element (e.g. the 3D view host)
+  // switch to absolute positioning so it is clipped to that element's bounds.
+  &.side-panel-contained {
+    position: absolute;
+    top: 0; // no menubar offset – parent already starts below it
+    bottom: 0;
+    overflow: hidden; // clip slide-out animations to parent bounds
+  }
+  display: flex;
+  z-index: 999; // Ensure it's above most other content
+  transition: all $animation-speed ease; // General transition (reconsider if needed)
+  width: auto; // Let width be determined by content (tabs + panel content)
+  // Default state for the container itself: Allow pointer events when open
+  pointer-events: auto;
+
+  // Styles specific to the right-side panel
+  &.side-panel-right {
+    right: 0; // Anchor to the right edge
+
+    .side-panel {
+      display: flex;
+      // Assumes HTML structure is [content][tabs] for right panel.
+      // If HTML is [tabs][content], use flex-direction: row-reverse;
+      flex-direction: row;
+
+      .side-panel-content {
+        order: 1; // Visual order if using flexbox ordering
+      }
+
+      .side-panel-tabs {
+        order: 2; // Visual order if using flexbox ordering
+        border-left: 1px solid $panel-border; // Border between content and tabs
+      }
+
+      .side-panel-resize-handle {
+        left: 0; // Position handle on the left of the content
+        cursor: ew-resize;
+      }
+    }
+
+    // Styles when the right panel is closed
+    &.side-panel-closed {
+      // Make the *entire container* non-interactive to prevent event blocking
+      pointer-events: none;
+
+      .side-panel-tabs {
+        // Re-enable interaction specifically for the tabs
+        pointer-events: auto;
+      }
+
+      .side-panel-content {
+        transform: translateX(100%); // Slide content out to the right
+        opacity: 0;
+        pointer-events: none; // Content itself is non-interactive
+      }
+
+      .side-panel-resize-handle {
+        transform: translateX(100%); // Slide handle out with content
+        opacity: 0;
+        pointer-events: none; // Handle is non-interactive when closed
+      }
+    }
+  }
+
+  // Styles specific to the left-side panel
+  &.side-panel-left {
+    left: 0; // Anchor to the left edge
+
+    .side-panel {
+      display: flex;
+      // Assumes HTML structure is [tabs][content] for left panel.
+      flex-direction: row;
+      // Consider moving border to tabs or content if this looks odd when closed
+      // border-right: 1px solid $panel-border;
+
+      .side-panel-tabs {
+        order: 1; // Visual order if using flexbox ordering
+        border-right: 1px solid $panel-border; // Border between tabs and content
+      }
+
+      .side-panel-content {
+        order: 2; // Visual order if using flexbox ordering
+      }
+
+      .side-panel-resize-handle {
+        right: 0; // Position handle on the right of the content
+        cursor: ew-resize;
+      }
+    }
+
+    // Styles when the left panel is closed
+    &.side-panel-closed {
+      // Make the *entire container* non-interactive to prevent event blocking
+      pointer-events: none;
+
+      // Optional: Remove border when closed if it looks out of place
+      // .side-panel {
+      //   border-right: none;
+      // }
+
+      .side-panel-tabs {
+        // Re-enable interaction specifically for the tabs
+        pointer-events: auto;
+      }
+
+      .side-panel-content {
+        transform: translateX(-100%); // Slide content out to the left
+        opacity: 0;
+        pointer-events: none; // Content itself is non-interactive
+      }
+
+      .side-panel-resize-handle {
+        transform: translateX(-100%); // Slide handle out with content
+        opacity: 0;
+        pointer-events: none; // Handle is non-interactive when closed
+      }
+    }
+  }
+
+  // Styles when the panel is pinned open
+  &.side-panel-pinned {
+    // Panel remains interactive via the default pointer-events: auto on the container
+    .side-panel-pin-button {
+      color: #4a95eb; // Indicate pinned state
+      i {
+        transform: rotate(0deg); // Rotate pin icon back
+      }
+    }
+  }
+}
+
+// Inner container holding tabs and content
+.side-panel {
+  background-color: transparent; // Backgrounds applied to children
+  color: $panel-text;
+  position: relative;
+  display: flex;
+  width: auto;
+  height: 100%;
+}
+
+// Resizing handle element
+.side-panel-resize-handle {
+  position: absolute;
+  width: 6px;
+  top: 0;
+  bottom: 0;
+  background-color: transparent;
+  z-index: 2; // Above content but below tabs if needed
+  transition: opacity $animation-speed ease, transform $animation-speed ease;
+  pointer-events: auto; // Handle needs to be interactive *when visible* (i.e., panel open)
+  // It gets turned off via the .side-panel-closed rule explicitly.
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+
+  &:active {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+}
+
+// Container for the vertical tabs
+.side-panel-tabs {
+  width: $tab-width;
+  height: 100%; // Takes full height of .side-panel
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 0;
+  background-color: darken($panel-bg, 5%);
+  flex-shrink: 0; // Prevent tabs from shrinking
+  overflow-y: auto; // Allow scrolling if many tabs
+  z-index: 10; // Ensure tabs are visually above content if overlap occurs
+  box-shadow: $panel-shadow;
+  @include blurred-bg;
+  // pointer-events are handled by the container rule and the override when closed
+  // Default state inherits 'auto' from container when open.
+
+  /* Custom scrollbar for tabs */
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+  }
+}
+
+// Individual tab button
+.side-panel-tab {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: $panel-tab-bg;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 8px;
+  transition: background-color 200ms ease;
+  position: relative; // Needed for ::after pseudo-element
+
+  &:hover {
+    background-color: lighten($panel-tab-bg, 5%);
+  }
+
+  // Active state for the selected tab
+  &.active {
+    background-color: $panel-tab-active-bg;
+    box-shadow: 0 0 0 2px rgba(74, 149, 235, 0.5); // Highlight active tab
+
+    // Active indicator bar
+    &::after {
+      content: '';
+      position: absolute;
+      width: 4px;
+      top: 4px;
+      bottom: 4px;
+      background-color: #4a95eb;
+      border-radius: 2px;
+
+      // Adjust indicator position based on panel side
+      .side-panel-left & {
+        left: -2px;
+        right: auto;
+      }
+
+      .side-panel-right & {
+        right: -2px;
+        left: auto;
+      }
+    }
+  }
+
+  i { // Icon within the tab
+    font-size: 16px;
+    margin-bottom: 4px;
+  }
+
+  .side-panel-tab-title { // Text label within the tab
+    font-size: 9px;
+    text-align: center;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+// Pin button (usually placed within the tab bar)
+.side-panel-pin-button {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: $panel-tab-bg;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 8px; // Match tab spacing
+  transition: background-color 200ms ease;
+
+  &:hover {
+    background-color: lighten($panel-tab-bg, 5%);
+  }
+
+  i { // Icon for the pin button
+    font-size: 16px;
+    transition: transform 200ms ease;
+    transform: rotate(90deg); // Default state (unpinned)
+  }
+}
+
+// Main content area of the panel
+.side-panel-content {
+  flex: 1; // Takes remaining available space
+  width: 250px; // Default width when open (can be overridden by resize)
+  min-width: 150px; // Example minimum width during resize
+  max-width: 600px; // Example maximum width during resize
+  height: calc(100% - 30px);
+  overflow: auto; // Allow content scrolling
+  padding: 15px;
+  background-color: $panel-bg;
+  box-shadow: $panel-shadow;
+  @include blurred-bg;
+  // No pointer-events needed here, handled by container rule
+  // Transitions for sliding in/out and fading
+  transition: transform $animation-speed ease, opacity $animation-speed ease;
+  will-change: transform, opacity; // Hint browser for optimization
+
+  /* Custom scrollbar for content area */
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
+}
+
+// Header style for sections within the panel content
+.side-panel-section-header {
+  font-size: 14px;
+  font-weight: 500;
+  margin: 0 0 5px 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: #eee !important;
+}
+
+// Styles for form elements within the panel content
+.panel-form-group {
+  margin-bottom: 15px;
+
+  label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 12px;
+    color: #ccc;
+  }
+
+  input, select, textarea {
+    width: 100%; // Use full width of container
+    background-color: rgba(30, 30, 30, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    padding: 6px 8px;
+    color: #eee;
+    font-size: 13px;
+
+    &:focus {
+      outline: none;
+      border-color: rgba(74, 149, 235, 0.5);
+      box-shadow: 0 0 0 2px rgba(74, 149, 235, 0.2);
+    }
+  }
+
+  .checkbox-group {
+    display: flex;
+    align-items: center;
+
+    input[type="checkbox"] {
+      width: auto; // Don't force checkbox to full width
+      margin-right: 8px;
+    }
+
+    label {
+      margin-bottom: 0; // Align label vertically with checkbox
+    }
+  }
+}
+
+
+// Media query for screens larger than full HD (1920px)
+@media screen and (min-width: 1921px) {
+  // Increase the width of the content area for larger screens
+  .side-panel-content {
+    width: 350px; // Wider default width on large screens
+    max-width: 800px; // Increased maximum width
+  }
+
+  // Optionally increase the tab width for better proportions
+  .side-panel-tabs {
+    width: 60px; // Slightly wider tab area
+  }
+
+  // Make the tab buttons larger
+  .side-panel-tab,
+  .side-panel-pin-button {
+    width: 48px;
+    height: 48px;
+
+    i {
+      font-size: 18px; // Larger icons
+    }
+
+    .side-panel-tab-title {
+      font-size: 10px; // Slightly larger text
+    }
+  }
+
+  // Increase the size of section headers
+  .side-panel-section-header {
+    font-size: 16px;
+    margin-bottom: 5px;
+    padding-bottom: 5px;
+  }
+
+  // Adjust form elements
+  .panel-form-group {
+    margin-bottom: 18px;
+
+    label {
+      font-size: 13px;
+    }
+
+    input, select, textarea {
+      padding: 8px 10px;
+      font-size: 14px;
+    }
+  }
+}

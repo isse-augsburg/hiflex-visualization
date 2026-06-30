@@ -1,0 +1,193 @@
+// Fonts
+$font-family-base: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+$font-family-mono: 'Consolas', 'Monaco', 'Courier New', monospace;
+
+// Base Spacing & Sizing
+$spacing-xs: 3px;
+$spacing-sm: 5px;
+$spacing-md: 8px;
+$spacing-lg: 10px;
+$spacing-xl: 15px;
+$border-radius: 3px;
+$animation-speed: 0.15s;
+
+// Log Level Color Map
+$log-level-colors: (
+        info: #3498db,
+        warning: #f39c12,
+        error: #e74c3c,
+        success: #2ecc71,
+        debug: #9b59b6,
+        command: #f1c40f,
+        result: #1abc9c
+);
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.console-panel-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font-family: $font-family-base;
+
+  // Use CSS variables for dynamic theme properties
+  --bg-main: #1e1e1e;
+  --bg-input: #2d2d2d;
+  --text-main: #f0f0f0;
+  --text-dim: #888;
+  --border-main: #333;
+  --focus-color: #{map-get($log-level-colors, info)};
+  --btn-bg: #333;
+  --btn-text: #f0f0f0;
+  --btn-hover-bg: #444;
+  --entry-hover-bg: rgba(255, 255, 255, 0.05);
+}
+
+.console-toolbar {
+  display: flex;
+  padding: $spacing-sm 0;
+  margin-bottom: $spacing-sm;
+
+  button {
+    background-color: var(--btn-bg);
+    color: var(--btn-text);
+    border: none;
+    border-radius: $border-radius;
+    padding: $spacing-xs $spacing-md;
+    margin-right: $spacing-sm;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background-color $animation-speed ease;
+
+    &:hover {
+      background-color: var(--btn-hover-bg);
+    }
+  }
+}
+
+.console-log-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: $spacing-lg;
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  border: 1px solid var(--border-main);
+  border-radius: $border-radius;
+  margin-bottom: $spacing-lg;
+  font-family: $font-family-mono;
+  font-size: 12px;
+  line-height: 1.5;
+
+}
+
+.console-log-entry {
+  margin-bottom: $spacing-xs;
+  border-left: 3px solid;
+  padding-left: $spacing-sm;
+  animation: fadeIn $animation-speed ease-out;
+  transition: background-color $animation-speed ease;
+
+  &:hover {
+    background-color: var(--entry-hover-bg);
+  }
+
+  // Generate all log level classes from the map
+  @each $level, $color in $log-level-colors {
+    &.console-log-#{$level} {
+      border-left-color: $color;
+
+      .console-log-prefix {
+        color: $color;
+      }
+    }
+  }
+}
+
+.console-log-timestamp {
+  color: var(--text-dim);
+  margin-right: $spacing-md;
+  font-size: 11px;
+}
+
+.console-log-prefix {
+  font-weight: bold;
+  margin-right: $spacing-md;
+}
+
+.console-log-message {
+  word-break: break-word;
+}
+
+.console-input-container {
+  display: flex;
+  margin-bottom: $spacing-lg;
+  align-items: center;
+}
+
+.console-input-prompt {
+  color: var(--text-main);
+  font-family: $font-family-mono;
+  font-size: 14px;
+  margin-right: $spacing-md;
+  font-weight: bold;
+}
+
+.console-input-field {
+  flex: 1;
+  background-color: var(--bg-input);
+  color: var(--text-main);
+  border: 1px solid var(--border-main);
+  padding: $spacing-sm $spacing-md;
+  border-radius: $border-radius;
+  outline: none;
+  font-family: $font-family-mono;
+  font-size: 14px;
+  transition: border-color $animation-speed ease, box-shadow $animation-speed ease;
+
+  &:focus {
+    border-color: var(--focus-color);
+    box-shadow: 0 0 0 1px var(--focus-color);
+  }
+}
+
+.console-theme-light {
+  --bg-main: #fdfdfd;
+  --bg-input: #ffffff;
+  --text-main: #333333;
+  --text-dim: #666666;
+  --border-main: #dddddd;
+  --btn-bg: #eeeeee;
+  --btn-text: #333333;
+  --btn-hover-bg: #dcdcdc;
+  --entry-hover-bg: rgba(0, 0, 0, 0.05);
+}
+
+.console-theme-blue {
+  --bg-main: #0d1a26;
+  --bg-input: #1a3a52;
+  --text-main: #cde;
+  --text-dim: #6a8aab;
+  --border-main: #1a3a52;
+  --btn-bg: #1a3a52;
+  --btn-text: #cde;
+  --btn-hover-bg: #2c5d87;
+  --entry-hover-bg: rgba(255, 255, 255, 0.07);
+}
+
+.console-theme-matrix {
+  --bg-main: #020f02;
+  --bg-input: #000000;
+  --text-main: #00ff00;
+  --text-dim: #00aa00;
+  --border-main: #006600;
+  --focus-color: #00ff00;
+  --btn-bg: #000000;
+  --btn-text: #00ff00;
+  --btn-hover-bg: #020;
+  --entry-hover-bg: rgba(0, 255, 0, 0.1);
+}

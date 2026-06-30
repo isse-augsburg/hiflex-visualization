@@ -1,0 +1,21 @@
+.jse-button.jse-group-button.jse-last {
+  display: none !important;
+}
+
+.json-editor-container {
+  height: 100% !important;
+  //max-height: 800px !important;
+}
+
+.jse-button.jse-group-button {
+  border-right: 1px solid white !important;
+}
+
+.jsoneditor-wrapper {
+  /* Reset styles to prevent inheritance from PyQt */
+  all: initial;
+}
+
+.jsoneditor-poweredBy {
+    display: none !important;
+}
