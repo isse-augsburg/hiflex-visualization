@@ -26,10 +26,10 @@ These videos illustrate the visualization in use and accompany the paper:
 
 ## Showcase build
 
-This repo also ships a **self-contained showcase build** of the visualization,
-so you can try it yourself. It runs entirely in your web browser, with **no ROS,
-no backend, no compilation, and no installation required**. The demo state is
-bundled into the page itself.
+This repo also ships a **self-contained showcase build** of the cell view of the
+visualization, so you can try it yourself.
+It runs entirely in your web browser, with **no ROS, no backend, no compilation,
+and no installation required**. The demo state is bundled into the page itself.
 
 This repo contains everything you need:
 
@@ -62,7 +62,7 @@ server and opens your browser automatically.
 **Windows:** double-click `start.bat`, or from a terminal:
 
 ```bat
-start.bat
+./start.bat
 ```
 
 The showcase opens at <http://localhost:8000/index.html>. Press `Ctrl+C` in the
@@ -80,6 +80,8 @@ If you'd rather not use the launchers, run the bundled server directly:
 ```bash
 python3 viz_build_showcase/serve_showcase.py        # or add a port, e.g. 9000
 ```
+
+In that case you will have to manually open <http://localhost:8000/index.html> (or replace 8000 by the port you chose) in your browser.
 
 ---
 
