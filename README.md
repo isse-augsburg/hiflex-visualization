@@ -40,7 +40,7 @@ This repo contains everything you need:
 
 ---
 
-## Requirements
+### Requirements
 
 - **Python 3** (3.7 or newer), already present on most Linux/macOS systems.
   On Windows, install it from <https://www.python.org/downloads/>.
@@ -48,7 +48,7 @@ This repo contains everything you need:
 
 ---
 
-## How to start
+### How to start
 
 From the root of this repo, run the launcher for your system. It starts the
 server and opens your browser automatically.
@@ -68,12 +68,12 @@ server and opens your browser automatically.
 The showcase opens at <http://localhost:8000/index.html>. Press `Ctrl+C` in the
 terminal to stop the server.
 
-### Using a different port
+#### Using a different port
 
 Pass a port number to either launcher, e.g. `./start.sh 9000` or
 `start.bat 9000`.
 
-### Manual start (any platform)
+#### Manual start (any platform)
 
 If you'd rather not use the launchers, run the bundled server directly:
 
@@ -85,10 +85,16 @@ In that case you will have to manually open <http://localhost:8000/index.html> (
 
 ---
 
-## Troubleshooting
+### Troubleshooting
 
 - **Blank page / missing images:** Don't double-click `index.html`, because
   browsers block local asset loading from `file://` URLs. Always start it with
   a launcher or `python3 serve_showcase.py` as shown above.
 - **"Address already in use":** Another process is using the port. Start on a
   different one, e.g. `python3 serve_showcase.py 9001`.
+
+## Exploratory Evaluation Workshops
+
+We added some additional explanation, the questionnaires and the results of the two exploratory evaluation workshops mentioned in the accompanying paper.
+  The information about the workshop for the cell view is can be found [here](workshops/cell-view/README.md).
+  The information about the workshop for the assembly plan view is can be found [here](workshops/assembly-plan-view/README.md).
